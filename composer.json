@@ -10,7 +10,6 @@
 		}
 	],
 	"support": {
-		"email": "jurasekpavel@ctyrimedia.cz",
 		"issues": "https://github.com/paveljurasek/mail/issues"
 	},
 	"require": {
@@ -18,10 +17,5 @@
 	},
 	"require-dev": {
 		"nette/tester": "dev-master"
-	},
-	"autoload": {
-		"psr-0": {
-			"JedenWeb": "src"
-		}
 	}
 }
