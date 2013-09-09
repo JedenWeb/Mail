@@ -1,0 +1,27 @@
+{
+	"name": "jedenweb/mail",
+	"type": "library",
+	"description": "Email factory for Nette Framework",
+	"keywords": ["nette", "mail"],
+	"license": ["BSD-3-Clause", "GPL-2.0", "GPL-3.0"],
+	"authors": [
+		{
+			"name": "Pavel Jurásek"
+		}
+	],
+	"support": {
+		"email": "jurasekpavel@ctyrimedia.cz",
+		"issues": "https://github.com/paveljurasek/mail/issues"
+	},
+	"require": {
+		"nette/nette": "dev-master"
+	},
+	"require-dev": {
+		"nette/tester": "dev-master"
+	},
+	"autoload": {
+		"psr-0": {
+			"JedenWeb": "src"
+		}
+	}
+}
