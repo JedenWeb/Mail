@@ -75,6 +75,10 @@ class Message extends Nette\Object
 	 */
 	public function setTemplateFile($file)
 	{
+		if (!\Nette\Utils\Strings::endsWith('.latte', $file)) {
+			$file .= '.latte';
+		}
+		
 		$file = strpos($file, DIRECTORY_SEPARATOR) === FALSE ? $this->templateDir.DIRECTORY_SEPARATOR.$file : $file;
 		$this->template->setFile($file);
 		
