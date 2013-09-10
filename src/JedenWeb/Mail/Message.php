@@ -7,6 +7,8 @@ use Nette\Mail\IMailer;
 use Nette\Application\IPresenter;
 
 /**
+ * @property-read \Nette\Mail\Message $message
+ * @property-read Nette\Templating\FileTemplate $template
  * @author Pavel Jurásek <jurasekpavel@ctyrimedia.cz>
  */
 class Message extends Nette\Object
