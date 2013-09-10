@@ -31,9 +31,7 @@ class Message extends Nette\Object
 	 * @param \Nette\Mail\IMailer $mailer
 	 */
 	public function __construct($templateDir, IMailer $mailer)
-	{
-		parent::__construct();
-		
+	{		
 		$this->templateDir = $templateDir;
 		$this->mailer = $mailer;
 		
