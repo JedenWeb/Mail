@@ -38,7 +38,7 @@ class MessageFactory
 	
 	
     /**
-     * @return Message
+     * @return \JedenWeb\Mail\Message
      */
     public function create()
 	{
@@ -51,7 +51,7 @@ class MessageFactory
 	
 	
 	/**
-	 * @return FileTemplate
+	 * @return \Nette\Templating\FileTemplate
 	 */
 	private function createTemplate()
 	{

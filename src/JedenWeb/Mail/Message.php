@@ -72,7 +72,7 @@ class Message extends Nette\Object
 	
 	/**
 	 * @param string $file
-	 * @return Message
+	 * @return \JedenWeb\Mail\Message
 	 * @throws \Nette\InvalidArgumentException
 	 */
 	public function setTemplateFile($file)
@@ -91,7 +91,7 @@ class Message extends Nette\Object
 	
 	/**
 	 * @param \Nette\Templating\ITemplate $template
-	 * @return Message  Provides fluent interface.
+	 * @return \JedenWeb\Mail\Message  Provides fluent interface.
 	 */
 	public function setTemplate(Nette\Templating\ITemplate $template)
 	{
