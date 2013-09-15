@@ -4,7 +4,6 @@ namespace JedenWeb\Mail\DI;
 
 use JedenWeb;
 use Nette;
-use Nette\DI\Statement;
 
 /**
  * @author Pavel Jurásek <jurasekpavel@ctyrimedia.cz>
