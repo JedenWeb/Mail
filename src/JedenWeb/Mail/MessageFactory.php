@@ -61,6 +61,7 @@ class MessageFactory
 
 		// default parameters
 		$template->presenter = $template->_presenter = $this->presenter;
+		$template->control = $template->_control = $this->presenter;
 		$template->setCacheStorage($this->presenter->getContext()->getService('nette.templateCacheStorage'));
 		$template->user = $this->presenter->getUser();
 		$template->netteHttpResponse = $this->presenter->getContext()->getByType('Nette\Http\Response');
