@@ -12,14 +12,14 @@ use Nette\Application\Application;
 class MessageFactory
 {
 	
-	/** @var string */
-	private $templateDir;
-	
-	/** @var IMailer */
+	/** @var \Nette\Mail\IMailer */
 	private $mailer;
 	
 	/** @var \Nette\Application\IPresenter */
 	private $presenter;
+	
+	/** @var string */
+	private $templateDir;
 	
 	
 	

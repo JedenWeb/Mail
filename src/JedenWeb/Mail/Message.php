@@ -13,18 +13,18 @@ use Nette\Application\IPresenter;
  */
 class Message extends Nette\Object
 {
-	
-	/** @var IMailer */
-	private $mailer;
 
-	/** @var Nette\Templating\FileTemplate */
+	/** @var \Nette\Mail\Message */
+	private $message;	
+	
+	/** @var \Nette\Mail\IMailer */
+	private $mailer;
+	
+	/** @var \Nette\Templating\FileTemplate */
 	private $template;
 
 	/** @var string */
-	private $templateDir;
-
-	/** @var Nette\Mail\Message */
-	private $message;
+	private $templateDir;	
 	
 	
 	
