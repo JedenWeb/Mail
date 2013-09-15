@@ -77,7 +77,7 @@ class Message extends Nette\Object
 	 */
 	public function setTemplateFile($file)
 	{
-		if (!\Nette\Utils\Strings::endsWith('.latte', $file)) {
+		if (!\Nette\Utils\Strings::endsWith($file, '.latte')) {
 			$file .= '.latte';
 		}
 		
