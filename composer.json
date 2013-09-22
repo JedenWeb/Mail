@@ -10,7 +10,7 @@
 		}
 	],
 	"support": {
-		"issues": "https://github.com/paveljurasek/mail/issues"
+		"issues": "https://github.com/JedenWeb/Mail/issues"
 	},
 	"require": {
 		"nette/nette": "dev-master"
