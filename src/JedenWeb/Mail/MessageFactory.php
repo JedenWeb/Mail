@@ -15,8 +15,8 @@ class MessageFactory
 	/** @var \Nette\Mail\IMailer */
 	private $mailer;
 	
-	/** @var \Nette\Application\IPresenter */
-	private $presenter;
+	/** @var Application */
+	private $application;	
 	
 	/** @var string */
 	private $templateDir;
@@ -32,7 +32,7 @@ class MessageFactory
 	{
 		$this->templateDir = $templateDir;
 		$this->mailer = $mailer;
-		$this->presenter = $application->getPresenter();
+		$this->application = $application;
 	}
 
 	
@@ -42,34 +42,9 @@ class MessageFactory
      */
     public function create()
 	{
-		$email = new Message($this->templateDir, $this->mailer);
-		$email->setTemplate($this->createTemplate());
+		$email = new Message($this->templateDir, $this->mailer, $this->application);
 		
 		return $email;
 	}
-	
-	
-	
-	/**
-	 * @return \Nette\Templating\FileTemplate
-	 */
-	private function createTemplate()
-	{
-		$template = new Nette\Templating\FileTemplate;
-		$template->registerHelperLoader('Nette\Templating\Helpers::loader');
-		$template->registerFilter(new Nette\Latte\Engine);
-
-		// default parameters
-		$template->presenter = $template->_presenter = $this->presenter;
-		$template->control = $template->_control = $this->presenter;
-		$template->setCacheStorage($this->presenter->getContext()->getService('nette.templateCacheStorage'));
-		$template->user = $this->presenter->getUser();
-		$template->netteHttpResponse = $this->presenter->getContext()->getByType('Nette\Http\Response');
-		$template->netteCacheStorage = $this->presenter->getContext()->getByType('Nette\Caching\IStorage');
-		$template->baseUri = $template->baseUrl = rtrim($this->presenter->getContext()->getByType('Nette\Http\Request')->getUrl()->getBaseUrl(), '/');
-		$template->basePath = preg_replace('#https?://[^/]+#A', '', $template->baseUrl);
-
-		return $template;
-	}	
 
 }

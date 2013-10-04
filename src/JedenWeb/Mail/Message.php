@@ -4,7 +4,7 @@ namespace JedenWeb\Mail;
 
 use Nette;
 use Nette\Mail\IMailer;
-use Nette\Application\IPresenter;
+use Nette\Application\Application;
 
 /**
  * @property-read \Nette\Mail\Message $message
@@ -26,16 +26,20 @@ class Message extends Nette\Object
 	/** @var string */
 	private $templateDir;	
 	
+	/** @var Application */
+	private $application;	
+	
 	
 	
 	/**
 	 * @param string $templateDir
 	 * @param \Nette\Mail\IMailer $mailer
+	 * @param Application $application
 	 */
-	public function __construct($templateDir, IMailer $mailer)
-	{		
-		$this->templateDir = $templateDir;
+	public function __construct($templateDir, IMailer $mailer, Application $application)
+	{
 		$this->mailer = $mailer;
+		$this->application = $application;
 		
 		$message = new Nette\Mail\Message;
 		$message->setHeader('X-Mailer', NULL); // remove Nette Framework from header X-Mailer
@@ -50,7 +54,9 @@ class Message extends Nette\Object
 	 */
 	public function send()
 	{
-		$this->message->setHtmlBody($this->template);
+		if ($this->template instanceof Nette\Templating\ITemplate) {
+			$this->message->setHtmlBody($this->template);
+		}
 		$this->mailer->send($this->message);
 	}
 	
@@ -82,7 +88,7 @@ class Message extends Nette\Object
 		}
 		
 		$file = strpos($file, DIRECTORY_SEPARATOR) === FALSE ? $this->templateDir.DIRECTORY_SEPARATOR.$file : $file;
-		$this->template->setFile($file);
+		$this->getTemplate()->setFile($file);
 		
 		return $this;
 	}
@@ -106,7 +112,36 @@ class Message extends Nette\Object
 	 */
 	public function getTemplate()
 	{
+		if (!$this->template) {
+			$this->setTemplate($this->createTemplate());
+		}
 		return $this->template;
+	}
+
+
+	
+	/**
+	 * @return Nette\Templating\FileTemplate
+	 */
+	private function createTemplate()
+	{
+		$template = new Nette\Templating\FileTemplate;
+		$template->registerHelperLoader('Nette\Templating\Helpers::loader');
+		$template->registerFilter(new Nette\Latte\Engine);
+		
+		$presenter = $this->application->getPresenter();
+		
+		// default parameters
+		$template->presenter = $template->_presenter = $presenter;
+		$template->control = $template->_control = $presenter;
+		$template->setCacheStorage($presenter->getContext()->getService('nette.templateCacheStorage'));
+		$template->user = $presenter->getUser();
+		$template->netteHttpResponse = $presenter->getContext()->getByType('Nette\Http\Response');
+		$template->netteCacheStorage = $presenter->getContext()->getByType('Nette\Caching\IStorage');
+		$template->baseUri = $template->baseUrl = rtrim($presenter->getContext()->getByType('Nette\Http\Request')->getUrl()->getBaseUrl(), '/');
+		$template->basePath = preg_replace('#https?://[^/]+#A', '', $template->baseUrl);
+
+		return $template;
 	}
 	
 }
