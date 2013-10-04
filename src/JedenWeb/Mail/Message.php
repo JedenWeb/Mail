@@ -2,29 +2,30 @@
 
 namespace JedenWeb\Mail;
 
+use JedenWeb;
 use Nette;
 use Nette\Mail\IMailer;
 use Nette\Application\Application;
 
 /**
  * @property-read \Nette\Mail\Message $message
- * @property-read Nette\Templating\FileTemplate $template
+ * @property-read \Nette\Templating\FileTemplate $template
  * @author Pavel Jurásek <jurasekpavel@ctyrimedia.cz>
  */
 class Message extends Nette\Object
 {
 
-	/** @var \Nette\Mail\Message */
+	/** @var Nette\Mail\Message */
 	private $message;	
 	
-	/** @var \Nette\Mail\IMailer */
+	/** @var IMailer */
 	private $mailer;
 	
-	/** @var \Nette\Templating\FileTemplate */
+	/** @var Nette\Templating\FileTemplate */
 	private $template;
 
 	/** @var string */
-	private $templateDir;	
+	private $templateDir;
 	
 	/** @var Application */
 	private $application;	
@@ -33,12 +34,13 @@ class Message extends Nette\Object
 	
 	/**
 	 * @param string $templateDir
-	 * @param \Nette\Mail\IMailer $mailer
+	 * @param IMailer $mailer
 	 * @param Application $application
 	 */
 	public function __construct($templateDir, IMailer $mailer, Application $application)
 	{
 		$this->mailer = $mailer;
+		$this->templateDir = $templateDir;
 		$this->application = $application;
 		
 		$message = new Nette\Mail\Message;
@@ -63,12 +65,12 @@ class Message extends Nette\Object
 	
 	
 	/**
-	 * @return \Nette\Mail\Message
+	 * @return Nette\Mail\Message
 	 */
 	public function getMessage()
 	{
 		return $this->message;
-	}	
+	}
 	
 	
 	
@@ -78,8 +80,8 @@ class Message extends Nette\Object
 	
 	/**
 	 * @param string $file
-	 * @return \JedenWeb\Mail\Message
-	 * @throws \Nette\InvalidArgumentException
+	 * @return JedenWeb\Mail\Message
+	 * @throws Nette\InvalidArgumentException
 	 */
 	public function setTemplateFile($file)
 	{
@@ -87,7 +89,9 @@ class Message extends Nette\Object
 			$file .= '.latte';
 		}
 		
-		$file = strpos($file, DIRECTORY_SEPARATOR) === FALSE ? $this->templateDir.DIRECTORY_SEPARATOR.$file : $file;
+		if (strpos($file, DIRECTORY_SEPARATOR) === FALSE) {
+			$file = $this->templateDir . DIRECTORY_SEPARATOR . $file;
+		}
 		$this->getTemplate()->setFile($file);
 		
 		return $this;
@@ -96,8 +100,8 @@ class Message extends Nette\Object
 	
 	
 	/**
-	 * @param \Nette\Templating\ITemplate $template
-	 * @return \JedenWeb\Mail\Message  Provides fluent interface.
+	 * @param Nette\Templating\ITemplate $template
+	 * @return JedenWeb\Mail\Message  Provides fluent interface.
 	 */
 	public function setTemplate(Nette\Templating\ITemplate $template)
 	{
@@ -108,7 +112,7 @@ class Message extends Nette\Object
 	
 	
 	/**
-	 * @return \Nette\Templating\FileTemplate
+	 * @return Nette\Templating\FileTemplate
 	 */
 	public function getTemplate()
 	{

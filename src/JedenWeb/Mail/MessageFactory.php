@@ -2,6 +2,7 @@
 
 namespace JedenWeb\Mail;
 
+use JedenWeb;
 use Nette;
 use Nette\Mail\IMailer;
 use Nette\Application\Application;
@@ -12,7 +13,7 @@ use Nette\Application\Application;
 class MessageFactory
 {
 	
-	/** @var \Nette\Mail\IMailer */
+	/** @var IMailer */
 	private $mailer;
 	
 	/** @var Application */
@@ -25,8 +26,8 @@ class MessageFactory
 	
 	/**
 	 * @param string $templateDir
-	 * @param \Nette\Mail\IMailer $mailer
-	 * @param \Nette\Application\Application $application
+	 * @param IMailer $mailer
+	 * @param Application $application
 	 */
 	public function __construct($templateDir, IMailer $mailer, Application $application)
 	{
@@ -38,7 +39,7 @@ class MessageFactory
 	
 	
     /**
-     * @return \JedenWeb\Mail\Message
+     * @return JedenWeb\Mail\Message
      */
     public function create()
 	{
