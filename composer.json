@@ -17,5 +17,10 @@
 	},
 	"require-dev": {
 		"nette/tester": "dev-master"
+	},
+	"autoload": {
+		"psr-0": {
+			"JedenWeb\\Mail\\": "src/"
+		}
 	}
 }
