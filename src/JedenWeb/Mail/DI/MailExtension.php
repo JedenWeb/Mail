@@ -6,7 +6,7 @@ use JedenWeb;
 use Nette;
 
 /**
- * @author Pavel Jurásek <jurasekpavel@ctyrimedia.cz>
+ * @author Pavel Jurásek
  */
 class MailExtension extends Nette\DI\CompilerExtension
 {	
@@ -15,16 +15,17 @@ class MailExtension extends Nette\DI\CompilerExtension
 	private $defaults = array(
 		'templateDir' => '%appDir%/email',
 	);
-	
-	
+
 	
 	public function loadConfiguration()
 	{
-		$config = $this->getConfig($this->defaults);
+        $config = $this->getConfig($this->defaults);
 		$container = $this->getContainerBuilder();
-		
+
 		$container->addDefinition($this->prefix('factory'))
-			->setClass('JedenWeb\Mail\MessageFactory', array($config['templateDir']));
+			->setClass('JedenWeb\Mail\Message', array($config['templateDir']))
+            ->setImplement('JedenWeb\Mail\IMessageFactory')
+            ->setAutowired(TRUE);
 	}
 
 }

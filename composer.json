@@ -13,10 +13,13 @@
 		"issues": "https://github.com/JedenWeb/Mail/issues"
 	},
 	"require": {
-		"nette/nette": "dev-master"
+        "bazo/nette-template-factory": "dev-master",
+		"nette/mail": "~2.2"
 	},
 	"require-dev": {
-		"nette/tester": "dev-master"
+		"nette/tester": "~1.1",
+        "nette/bootstrap": "~2.2",
+        "nette/safe-stream": "~2.2"
 	},
 	"autoload": {
 		"psr-0": {

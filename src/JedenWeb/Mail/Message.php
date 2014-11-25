@@ -2,15 +2,16 @@
 
 namespace JedenWeb\Mail;
 
+use Bazo\TemplateFactory\TemplateFactory;
 use JedenWeb;
 use Nette;
 use Nette\Mail\IMailer;
-use Nette\Application\Application;
+use Nette\Application\UI\ITemplate;
 
 /**
  * @property-read \Nette\Mail\Message $message
- * @property-read \Nette\Templating\FileTemplate $template
- * @author Pavel Jurásek <jurasekpavel@ctyrimedia.cz>
+ * @property-read \Nette\Application\UI\ITemplate $template
+ * @author Pavel Jurásek
  */
 class Message extends Nette\Object
 {
@@ -20,49 +21,41 @@ class Message extends Nette\Object
 	
 	/** @var IMailer */
 	private $mailer;
+
+    /** @var TemplateFactory */
+    private $templateFactory;
 	
-	/** @var Nette\Templating\FileTemplate */
+	/** @var ITemplate */
 	private $template;
 
 	/** @var string */
 	private $templateDir;
 	
-	/** @var Application */
-	private $application;	
-	
-	
-	
-	/**
-	 * @param string $templateDir
-	 * @param IMailer $mailer
-	 * @param Application $application
-	 */
-	public function __construct($templateDir, IMailer $mailer, Application $application)
+
+	public function __construct($templateDir, IMailer $mailer, TemplateFactory $templateFactory)
 	{
 		$this->mailer = $mailer;
 		$this->templateDir = $templateDir;
-		$this->application = $application;
+		$this->templateFactory = $templateFactory;
 		
 		$message = new Nette\Mail\Message;
 		$message->setHeader('X-Mailer', NULL); // remove Nette Framework from header X-Mailer
 		
 		$this->message = $message;
 	}
-	
-	
+
 	
 	/**
 	 * Send message
 	 */
 	public function send()
 	{
-		if ($this->template instanceof Nette\Templating\ITemplate) {
+		if ($this->template instanceof ITemplate) {
 			$this->message->setHtmlBody($this->template);
 		}
 		$this->mailer->send($this->message);
 	}
-	
-	
+
 	
 	/**
 	 * @return Nette\Mail\Message
@@ -72,15 +65,14 @@ class Message extends Nette\Object
 		return $this->message;
 	}
 	
-	
-	
+
 	/********************* templating *********************/
 	
-	
-	
+
 	/**
-	 * @param string $file
-	 * @return JedenWeb\Mail\Message
+	 * @param string
+     *
+	 * @return JedenWeb\Mail\Message  Provides fluent interface.
 	 * @throws Nette\InvalidArgumentException
 	 */
 	public function setTemplateFile($file)
@@ -96,56 +88,30 @@ class Message extends Nette\Object
 		
 		return $this;
 	}
-	
-	
+
 	
 	/**
-	 * @param Nette\Templating\ITemplate $template
+	 * @param ITemplate
+     *
 	 * @return JedenWeb\Mail\Message  Provides fluent interface.
 	 */
-	public function setTemplate(Nette\Templating\ITemplate $template)
+	public function setTemplate(ITemplate $template)
 	{
 		$this->template = $template;
 		return $this;
 	}
 	
-	
-	
+
 	/**
-	 * @return Nette\Templating\FileTemplate
+	 * @return ITemplate
 	 */
 	public function getTemplate()
 	{
 		if (!$this->template) {
-			$this->setTemplate($this->createTemplate());
+			$this->setTemplate($this->templateFactory->createTemplate(NULL));
 		}
+
 		return $this->template;
 	}
 
-
-	
-	/**
-	 * @return Nette\Templating\FileTemplate
-	 */
-	private function createTemplate()
-	{
-		$template = new Nette\Templating\FileTemplate;
-		$template->registerHelperLoader('Nette\Templating\Helpers::loader');
-		$template->registerFilter(new Nette\Latte\Engine);
-		
-		$presenter = $this->application->getPresenter();
-		
-		// default parameters
-		$template->presenter = $template->_presenter = $presenter;
-		$template->control = $template->_control = $presenter;
-		$template->setCacheStorage($presenter->getContext()->getService('nette.templateCacheStorage'));
-		$template->user = $presenter->getUser();
-		$template->netteHttpResponse = $presenter->getContext()->getByType('Nette\Http\Response');
-		$template->netteCacheStorage = $presenter->getContext()->getByType('Nette\Caching\IStorage');
-		$template->baseUri = $template->baseUrl = rtrim($presenter->getContext()->getByType('Nette\Http\Request')->getUrl()->getBaseUrl(), '/');
-		$template->basePath = preg_replace('#https?://[^/]+#A', '', $template->baseUrl);
-
-		return $template;
-	}
-	
 }
