@@ -1,0 +1,4 @@
+extensions:
+    - Bazo\Linker\DI\LinkerExtension
+    - Bazo\TemplateFactory\DI\TemplateFactoryExtension
+    - JedenWeb\Mail\DI\MailExtension
