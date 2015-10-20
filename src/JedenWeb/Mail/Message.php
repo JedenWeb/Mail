@@ -2,9 +2,10 @@
 
 namespace JedenWeb\Mail;
 
-use Bazo\TemplateFactory\TemplateFactory;
 use JedenWeb;
 use Nette;
+use Nette\Application\LinkGenerator;
+use Nette\Application\UI\ITemplateFactory;
 use Nette\Mail\IMailer;
 use Nette\Application\UI\ITemplate;
 
@@ -22,7 +23,7 @@ class Message extends Nette\Object
 	/** @var IMailer */
 	private $mailer;
 
-    /** @var TemplateFactory */
+    /** @var ITemplateFactory */
     private $templateFactory;
 	
 	/** @var ITemplate */
@@ -30,14 +31,18 @@ class Message extends Nette\Object
 
 	/** @var string */
 	private $templateDir;
-	
 
-	public function __construct($templateDir, IMailer $mailer, TemplateFactory $templateFactory)
+	/** @var LinkGenerator */
+	private $linkGenerator;
+
+
+	public function __construct($templateDir, IMailer $mailer, ITemplateFactory $templateFactory, LinkGenerator $linkGenerator)
 	{
 		$this->mailer = $mailer;
 		$this->templateDir = $templateDir;
 		$this->templateFactory = $templateFactory;
 		
+		$this->linkGenerator = $linkGenerator;
 		$message = new Nette\Mail\Message;
 		$message->setHeader('X-Mailer', NULL); // remove Nette Framework from header X-Mailer
 		
@@ -51,7 +56,7 @@ class Message extends Nette\Object
 	public function send()
 	{
 		if ($this->template instanceof ITemplate) {
-			$this->message->setHtmlBody($this->template);
+			$this->message->setHtmlBody((string) $this->template);
 		}
 		$this->mailer->send($this->message);
 	}
@@ -109,6 +114,7 @@ class Message extends Nette\Object
 	{
 		if (!$this->template) {
 			$this->setTemplate($this->templateFactory->createTemplate(NULL));
+			$this->template->_control = $this->linkGenerator;
 		}
 
 		return $this->template;

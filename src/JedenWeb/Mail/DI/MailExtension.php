@@ -24,8 +24,7 @@ class MailExtension extends Nette\DI\CompilerExtension
 
 		$container->addDefinition($this->prefix('factory'))
 			->setClass('JedenWeb\Mail\Message', array($config['templateDir']))
-            ->setImplement('JedenWeb\Mail\IMessageFactory')
-            ->setAutowired(TRUE);
+            ->setImplement('JedenWeb\Mail\IMessageFactory');
 	}
 
 }
