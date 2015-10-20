@@ -1,17 +1,24 @@
 <?php
 
-use JedenWeb\Mail\DI\MailExtension;
-
 require __DIR__ . '/../bootstrap.php';
 require __DIR__ . '/../../src/JedenWeb/Mail/IMessageFactory.php';
 
-$configurator = new Nette\Configurator;
-$configurator->addConfig(__DIR__ . '/config.neon');
-$configurator->setDebugMode(FALSE);
-$configurator->setTempDirectory(__DIR__ . '/../temp');
+class Implementation implements \JedenWeb\Mail\IMessageFactory
+{
 
-$container = $configurator->createContainer();
+	public function create()
+	{
+		$mailer = Mockery::mock('Nette\Mail\IMailer');
+		$templateFactory = Mockery::mock('Nette\Application\UI\ITemplateFactory');
+		$linkGenerator = Mockery::mock('Nette\Application\LinkGenerator');
 
-$factory = $container->getByType('JedenWeb\Mail\IMessageFactory');
+		return new \JedenWeb\Mail\Message('', $mailer, $templateFactory, $linkGenerator);
+	}
+
+}
+
+$factory = new Implementation;
 
 \Tester\Assert::type('JedenWeb\Mail\IMessageFactory', $factory);
+
+\Tester\Assert::type('JedenWeb\Mail\Message', $factory->create());

@@ -7,6 +7,8 @@ if (!class_exists('Tester\Assert')) {
 	exit(1);
 }
 
+date_default_timezone_set('Europe/Prague');
+
 Tester\Environment::setup();
 
 define('TEMP_DIR', __DIR__ . '/temp');
