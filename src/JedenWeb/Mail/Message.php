@@ -114,7 +114,7 @@ class Message extends Nette\Object
 	{
 		if (!$this->template) {
 			$this->setTemplate($this->templateFactory->createTemplate(NULL));
-			$this->template->_control = $this->linkGenerator;
+			$this->template->getLatte()->addProvider('uiControl', $this->linkGenerator);
 		}
 
 		return $this->template;
