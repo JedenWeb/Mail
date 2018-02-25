@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace JedenWeb\Mail;
 
@@ -8,10 +8,6 @@ namespace JedenWeb\Mail;
 interface IMessageFactory
 {
 
-    /**
-     * @return Message
-     */
-    public function create();
+    public function create(): Message;
 
 }
- 

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace JedenWeb\Mail\DI;
 
@@ -9,14 +9,13 @@ use Nette;
  * @author Pavel Jurásek
  */
 class MailExtension extends Nette\DI\CompilerExtension
-{	
-	
-	/** @var array */
-	private $defaults = array(
-		'templateDir' => '%appDir%/email',
-	);
+{
 
-	
+	/** @var array */
+	private $defaults = [
+		'templateDir' => '%appDir%/email',
+	];
+
 	public function loadConfiguration()
 	{
         $config = $this->getConfig($this->defaults);

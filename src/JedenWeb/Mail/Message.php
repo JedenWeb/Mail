@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace JedenWeb\Mail;
 
@@ -10,22 +10,20 @@ use Nette\Mail\IMailer;
 use Nette\Application\UI\ITemplate;
 
 /**
- * @property-read \Nette\Mail\Message $message
- * @property-read \Nette\Application\UI\ITemplate $template
  * @author Pavel Jurásek
  */
-class Message extends Nette\Object
+class Message
 {
 
 	/** @var Nette\Mail\Message */
-	private $message;	
-	
+	private $message;
+
 	/** @var IMailer */
 	private $mailer;
 
     /** @var ITemplateFactory */
     private $templateFactory;
-	
+
 	/** @var ITemplate */
 	private $template;
 
@@ -35,25 +33,20 @@ class Message extends Nette\Object
 	/** @var LinkGenerator */
 	private $linkGenerator;
 
-
 	public function __construct($templateDir, IMailer $mailer, ITemplateFactory $templateFactory, LinkGenerator $linkGenerator)
 	{
 		$this->mailer = $mailer;
 		$this->templateDir = $templateDir;
 		$this->templateFactory = $templateFactory;
-		
+
 		$this->linkGenerator = $linkGenerator;
 		$message = new Nette\Mail\Message;
-		$message->setHeader('X-Mailer', NULL); // remove Nette Framework from header X-Mailer
-		
+		$message->setHeader('X-Mailer', null); // remove Nette Framework from header X-Mailer
+
 		$this->message = $message;
 	}
 
-	
-	/**
-	 * Send message
-	 */
-	public function send()
+	public function send(): void
 	{
 		if ($this->template instanceof ITemplate) {
 			$this->message->setHtmlBody((string) $this->template);
@@ -61,59 +54,35 @@ class Message extends Nette\Object
 		$this->mailer->send($this->message);
 	}
 
-	
-	/**
-	 * @return Nette\Mail\Message
-	 */
-	public function getMessage()
+	public function getMessage(): Nette\Mail\Message
 	{
 		return $this->message;
 	}
-	
 
-	/********************* templating *********************/
-	
-
-	/**
-	 * @param string
-     *
-	 * @return JedenWeb\Mail\Message  Provides fluent interface.
-	 * @throws Nette\InvalidArgumentException
-	 */
-	public function setTemplateFile($file)
+	public function setTemplateFile(string $file): self
 	{
 		if (!\Nette\Utils\Strings::endsWith($file, '.latte')) {
 			$file .= '.latte';
 		}
-		
-		if (strpos($file, DIRECTORY_SEPARATOR) === FALSE) {
+
+		if (strpos($file, DIRECTORY_SEPARATOR) === false) {
 			$file = $this->templateDir . DIRECTORY_SEPARATOR . $file;
 		}
 		$this->getTemplate()->setFile($file);
-		
+
 		return $this;
 	}
 
-	
-	/**
-	 * @param ITemplate
-     *
-	 * @return JedenWeb\Mail\Message  Provides fluent interface.
-	 */
-	public function setTemplate(ITemplate $template)
+	public function setTemplate(ITemplate $template): self
 	{
 		$this->template = $template;
 		return $this;
 	}
-	
 
-	/**
-	 * @return ITemplate
-	 */
-	public function getTemplate()
+	public function getTemplate(): ITemplate
 	{
 		if (!$this->template) {
-			$this->setTemplate($this->templateFactory->createTemplate(NULL));
+			$this->setTemplate($this->templateFactory->createTemplate(null));
 			$this->template->getLatte()->addProvider('uiControl', $this->linkGenerator);
 		}
 
